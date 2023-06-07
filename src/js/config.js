@@ -14,6 +14,7 @@ const gltfpath = new URL(
 ).href;
 const stadium = new URL("../../public/models/CG2.gltf", import.meta.url).href;
 let texLoader = new THREE.TextureLoader();
+const group = new THREE.Group();
 
 let _runStore = [];
 // runs (61,47,-55 ),sixes (61,47,-10 ), fours(61,60.9,-55) runball(61,60.9,-10)
@@ -25,11 +26,10 @@ $(document).ready(function () {
 
   let detect = detectWebGL();
   if (detect == 1) {
-    const camera = new ZapparThree.Camera();
-
     init = new sceneSetup(70, 1, 1000, 70, 150, 70); //100,100,50
     modelLoad = new objLoad();
     modelLoad.Model();
+
     //    drawWagonWheels();
     //FOR SCORE MESH LOADING
     scoreMeshData.map((data) => {
@@ -46,6 +46,8 @@ $(document).ready(function () {
       planeScore.rotation.set(0, Math.PI / 2, 0);
       console.log("checkl", planeScore);
       planeScore.visible = false;
+      init.instantTrackerGroup.add(group);
+      console.log(init.instantTrackerGroup);
     });
 
     //   modelLoad.groundRef();
@@ -84,10 +86,13 @@ function drawWagonWheels(xVal, yVal, color, name) {
       side: THREE.DoubleSide,
     })
   );
-  init.instantTrackerGroup.add(mesh);
+  group.add(mesh);
   mesh.scale.set(0.1, 0.1, 0.1);
-  mesh.position.set(-5.9, -3, -9);
-  mesh.rotation.x = Math.PI / 7;
+  const stad = group.getObjectByName("stadium");
+  console.log(stad);
+  mesh.position.set(-5.2, -6, -12.5);
+  // mesh.position.set(-7, 5, -5);
+  // mesh.rotation.x = Math.PI / 7;
   mesh.name = "WagonWheels_" + name;
   mesh.material.color.setHex(color);
   _runStore.push(mesh);
@@ -156,7 +161,7 @@ function scoreDisplay(data, name, size, right, rightCan) {
   ctx.stroke();
   ctx.fill();
 
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = "red";
   ctx.textAlign = "center";
   ctx.fillText(text, right, 45); //150 ,40
 
@@ -174,11 +179,11 @@ export const displayRunMesh = (data) => {
   _displayPlayerMesh.material.map = texLoader.load(data.player_image);
   _displayPlayerMesh.needsUpdate = true;
   _displayPlayerMesh.visible = true;
-  scoreDisplay(data, "runball", 20, 150, 300);
-  scoreDisplay(data, "runs", 35, 175, 350);
-  scoreDisplay(data, "sixes", 40, 100, 200);
-  scoreDisplay(data, "fours", 40, 100, 200);
-  scoreDisplay(data, "profile", 30, 175, 350);
+  scoreDisplay(data, "runball", 2, 15, 10);
+  scoreDisplay(data, "runs", 3, 17, 35);
+  scoreDisplay(data, "sixes", 4, 10, 20);
+  scoreDisplay(data, "fours", 4, 10, 20);
+  scoreDisplay(data, "profile", 3, 17, 35);
 };
 
 function detectWebGL() {
@@ -208,7 +213,7 @@ function detectWebGL() {
 let material = {
   cube: new THREE.MeshLambertMaterial({
     //   map:THREE.ImageUtils.loadTexture("assets/Road texture.png"),
-    color: 0x000000,
+    color: 0xff0000,
     combine: THREE.MixOperation,
     side: THREE.DoubleSide,
   }),
@@ -237,7 +242,7 @@ class sceneSetup {
       this.instantTracker
     );
     this.scene.add(this.instantTrackerGroup);
-    console.log(this.cameraMain, this.instantTrackerGroup, this.scene);
+    // console.log(this.cameraMain, this.instantTrackerGroup, this.scene);
     this.addingCube();
 
     // this.camera(FOV, near, far, x, y, z);
@@ -260,7 +265,7 @@ class sceneSetup {
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.container.appendChild(this.renderer.domElement);
 
-    console.log(this.cameraMain);
+    // console.log(this.cameraMain);
     this.scene.background = this.cameraMain.backgroundTexture;
     this.cameraMain.position.set(1000, 70, 150);
     this.cameraMain.lookAt(0, 0, 0);
@@ -281,7 +286,7 @@ class sceneSetup {
   }
   animate() {
     if (!this.hasPlaced) {
-      this.instantTrackerGroup.setAnchorPoseFromCameraOffset(0, 0, -6);
+      this.instantTrackerGroup.setAnchorPoseFromCameraOffset(0, 0, -4);
     }
 
     this.cameraMain.updateFrame(this.renderer);
@@ -332,22 +337,25 @@ class objLoad {
       });
       this.mesh.scale.set(5.5, 5.5, 5.5); //11.5
       this.mesh.position.set(-30, -10, -60);
-      this.mesh.rotation.y = Math.PI / 8;
+      this.mesh.name = "path";
+      // this.mesh.rotation.y = Math.PI / 8;
       console.log(this.mesh.position);
-      init.instantTrackerGroup.add(this.mesh);
+      group.add(this.mesh);
       // this.mesh.lookAt(init.cameraMain);
     });
     this.loader.load(stadium, (gltf) => {
       this.mesh2 = gltf.scene;
-      this.mesh2.scale.set(0.1, 0.1, 0.1);
-      this.mesh2.rotation.y = Math.PI / 2;
-      this.mesh2.rotation.x = Math.PI / 10;
-      this.mesh2.position.set(0, -3, -33.5);
-      init.instantTrackerGroup.add(this.mesh2);
+      this.mesh2.scale.set(0.2, 0.2, 0.2);
+      this.mesh2.rotation.y = Math.PI / 5;
+      this.mesh2.name = "stadium";
+      // this.mesh2.rotation.x = Math.PI / 10;
+      this.mesh2.position.set(0, -25, -60);
+      // this.mesh2.position.set(53, 0, -48.5);
+      group.add(this.mesh2);
     });
     let point = new THREE.PointLight(0xffffff, 1.2);
     point.position.set(50.066, 100, -49.5);
-    init.instantTrackerGroup.add(point);
+    group.add(point);
   }
   groundRef() {
     this.manager = new ZapparThree.LoadingManager();
