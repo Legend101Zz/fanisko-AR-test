@@ -29,7 +29,7 @@ $(document).ready(function () {
     init = new sceneSetup(70, 1, 1000, 70, 150, 70); //100,100,50
     modelLoad = new objLoad();
     modelLoad.Model();
-
+    // init.instantTrackerGroup.position.set(2, 2, 5);
     //    drawWagonWheels();
     //FOR SCORE MESH LOADING
     scoreMeshData.map((data) => {
@@ -94,7 +94,7 @@ function drawWagonWheels(xVal, yVal, color, name) {
 
   console.log("heree", test, mesh);
   mesh.scale.set(1.33, 1.33, 1.33);
-  mesh.position.set(-50, 10, 70);
+  mesh.position.set(-50, 12, 73);
   // mesh.position.set(-7, 5, -5);
   // mesh.rotation.x = Math.PI / 7;
   mesh.name = "WagonWheels_" + name;
@@ -246,6 +246,7 @@ class sceneSetup {
       this.instantTracker
     );
     this.scene.add(this.instantTrackerGroup);
+    this.instantTrackerGroup.position.set(0, 2, 5);
     // console.log(this.cameraMain, this.instantTrackerGroup, this.scene);
     this.addingCube();
 
@@ -290,12 +291,15 @@ class sceneSetup {
     // this.scene.add(this.ambiLight);
   }
   animate() {
+    requestAnimationFrame(this.animate.bind(this));
+    console.log(this.cameraMain.position, this.instantTrackerGroup.position);
+
     if (!this.hasPlaced) {
       this.instantTrackerGroup.setAnchorPoseFromCameraOffset(0, 0, 5);
     }
-
+    // this.instantTrackerGroup.position.set(0, 0, 5);
     this.cameraMain.updateFrame(this.renderer);
-    requestAnimationFrame(this.animate.bind(this));
+
     // this.controls.update();
     this.renderer.render(this.scene, this.cameraMain);
   }
@@ -341,7 +345,7 @@ class objLoad {
         }
       });
       this.mesh.scale.set(2, 2, 2); //11.5
-      this.mesh.position.set(-3, -7, 60);
+      this.mesh.position.set(-3, -11, 60);
       this.mesh.name = "path";
       this.mesh.rotation.y = Math.PI / 3;
       console.log(this.mesh.position);
@@ -354,7 +358,7 @@ class objLoad {
       this.mesh2.rotation.y = Math.PI / 2.5;
       this.mesh2.name = "stadium";
       // this.mesh2.rotation.x = Math.PI / 10;
-      this.mesh2.position.set(0, -10, 50);
+      this.mesh2.position.set(0, -20, 50);
       // this.mesh2.position.set(53, 0, -48.5);
       init.instantTrackerGroup.add(this.mesh2);
     });
