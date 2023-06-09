@@ -86,11 +86,15 @@ function drawWagonWheels(xVal, yVal, color, name) {
       side: THREE.DoubleSide,
     })
   );
-  group.add(mesh);
-  mesh.scale.set(0.1, 0.1, 0.1);
-  const stad = group.getObjectByName("stadium");
-  console.log(stad);
-  mesh.position.set(-5.2, -6, -12.5);
+  // const stad = group.getObjectByName("stadium");
+  // group.add(mesh);
+  let test = init.instantTrackerGroup.getObjectByName("stadium");
+  test.add(mesh);
+  console.log(test);
+
+  console.log("heree", test, mesh);
+  mesh.scale.set(1.33, 1.33, 1.33);
+  mesh.position.set(-50, 10, 70);
   // mesh.position.set(-7, 5, -5);
   // mesh.rotation.x = Math.PI / 7;
   mesh.name = "WagonWheels_" + name;
@@ -267,8 +271,9 @@ class sceneSetup {
 
     // console.log(this.cameraMain);
     this.scene.background = this.cameraMain.backgroundTexture;
-    this.cameraMain.position.set(1000, 70, 150);
-    this.cameraMain.lookAt(0, 0, 0);
+
+    // this.cameraMain.position.set(1000, 70, 150);
+    // this.cameraMain.lookAt(0, 0, 0);
   }
   addingCube() {
     this.geo = new THREE.BoxBufferGeometry(2, 2, 2);
@@ -286,7 +291,7 @@ class sceneSetup {
   }
   animate() {
     if (!this.hasPlaced) {
-      this.instantTrackerGroup.setAnchorPoseFromCameraOffset(0, 0, -4);
+      this.instantTrackerGroup.setAnchorPoseFromCameraOffset(0, 0, 5);
     }
 
     this.cameraMain.updateFrame(this.renderer);
@@ -335,27 +340,27 @@ class objLoad {
           }
         }
       });
-      this.mesh.scale.set(5.5, 5.5, 5.5); //11.5
-      this.mesh.position.set(-30, -10, -60);
+      this.mesh.scale.set(2, 2, 2); //11.5
+      this.mesh.position.set(-3, -7, 60);
       this.mesh.name = "path";
-      // this.mesh.rotation.y = Math.PI / 8;
+      this.mesh.rotation.y = Math.PI / 3;
       console.log(this.mesh.position);
-      group.add(this.mesh);
+      init.instantTrackerGroup.add(this.mesh);
       // this.mesh.lookAt(init.cameraMain);
     });
     this.loader.load(stadium, (gltf) => {
       this.mesh2 = gltf.scene;
-      this.mesh2.scale.set(0.2, 0.2, 0.2);
-      this.mesh2.rotation.y = Math.PI / 5;
+      this.mesh2.scale.set(0.1, 0.1, 0.1);
+      this.mesh2.rotation.y = Math.PI / 2.5;
       this.mesh2.name = "stadium";
       // this.mesh2.rotation.x = Math.PI / 10;
-      this.mesh2.position.set(0, -25, -60);
+      this.mesh2.position.set(0, -10, 50);
       // this.mesh2.position.set(53, 0, -48.5);
-      group.add(this.mesh2);
+      init.instantTrackerGroup.add(this.mesh2);
     });
     let point = new THREE.PointLight(0xffffff, 1.2);
     point.position.set(50.066, 100, -49.5);
-    group.add(point);
+    init.instantTrackerGroup.add(point);
   }
   groundRef() {
     this.manager = new ZapparThree.LoadingManager();
